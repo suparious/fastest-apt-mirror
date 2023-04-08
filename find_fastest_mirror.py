@@ -2,6 +2,7 @@ import requests
 import time
 import sys
 import json
+import argparse
 from operator import itemgetter
 
 def load_config():
@@ -32,11 +33,20 @@ def find_top_mirrors(mirror_list, package_path, top_n=3):
     sorted_mirrors = sorted(mirror_speeds, key=itemgetter(1))
     return sorted_mirrors[:top_n]
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Find the fastest mirror for a specified distribution.")
+    parser.add_argument("-d", "--distro", help="specify the distribution (e.g., debian, ubuntu)")
+    return parser.parse_args()
+
 def main():
+    args = parse_args()
     config = load_config()
 
-    # Change this to "ubuntu" for testing Ubuntu mirrors
-    distro = "debian"
+    distro = args.distro if args.distro else list(config.keys())[0]
+
+    if distro not in config:
+        print(f"Error: Distribution '{distro}' not found in the configuration file.")
+        sys.exit(1)
 
     mirrors = config[distro]["mirrors"]
     package_path = config[distro]["package_path"]
