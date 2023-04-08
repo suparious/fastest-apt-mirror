@@ -1,0 +1,20 @@
+{
+  "debian": {
+    "mirrors": [
+      "http://ftp.ca.debian.org/debian",
+      "http://debian.mirror.iweb.ca/debian",
+      "http://mirror.csclub.uwaterloo.ca/debian",
+      "http://mirror.estone.ca/debian",
+      "http://mirror.it.ubc.ca/debian"
+    ],
+    "package_path": "/dists/bullseye/main/binary-amd64/Packages.gz"
+  },
+  "ubuntu": {
+    "mirrors": [
+      "http://archive.ubuntu.com/ubuntu",
+      "http://us.archive.ubuntu.com/ubuntu",
+      "http://uk.archive.ubuntu.com/ubuntu"
+    ],
+    "package_path": "/dists/focal/main/binary-amd64/Packages.gz"
+  }
+}

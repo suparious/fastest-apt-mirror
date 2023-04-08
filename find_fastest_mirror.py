@@ -1,10 +1,15 @@
 import requests
 import time
 import sys
+import json
 from operator import itemgetter
 
-def test_mirror_speed(mirror_url):
-    package_url = mirror_url + "/dists/bullseye/main/binary-amd64/Packages.gz"
+def load_config():
+    with open("config.json", "r") as file:
+        return json.load(file)
+
+def test_mirror_speed(mirror_url, package_path):
+    package_url = mirror_url + package_path
     start_time = time.time()
     
     try:
@@ -17,31 +22,29 @@ def test_mirror_speed(mirror_url):
     elapsed_time = time.time() - start_time
     return elapsed_time
 
-def find_top_mirrors(mirror_list, top_n=3):
+def find_top_mirrors(mirror_list, package_path, top_n=3):
     mirror_speeds = []
 
     for mirror_url in mirror_list:
-        elapsed_time = test_mirror_speed(mirror_url)
+        elapsed_time = test_mirror_speed(mirror_url, package_path)
         mirror_speeds.append((mirror_url, elapsed_time))
 
     sorted_mirrors = sorted(mirror_speeds, key=itemgetter(1))
     return sorted_mirrors[:top_n]
 
 def main():
-    debian_mirrors = [
-        "http://ftp.debian.org/debian",
-        "http://ftp.ca.debian.org/debian",
-        "http://debian.mirror.iweb.ca/debian",
-        "http://mirror.csclub.uwaterloo.ca/debian",
-        "http://mirror.estone.ca/debian",
-        "http://mirror.it.ubc.ca/debian",
-        # Add more mirror URLs here
-    ]
+    config = load_config()
 
-    top_mirrors = find_top_mirrors(debian_mirrors)
+    # Change this to "ubuntu" for testing Ubuntu mirrors
+    distro = "debian"
+
+    mirrors = config[distro]["mirrors"]
+    package_path = config[distro]["package_path"]
+
+    top_mirrors = find_top_mirrors(mirrors, package_path)
 
     if top_mirrors:
-        print("Top 3 mirrors found:")
+        print(f"Top 3 mirrors for {distro.capitalize()} found:")
         for i, (mirror, response_time) in enumerate(top_mirrors, 1):
             print(f"{i}. {mirror} (response time: {response_time:.2f}s)")
     else:
