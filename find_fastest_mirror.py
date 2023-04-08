@@ -4,6 +4,7 @@ import sys
 import json
 import argparse
 from operator import itemgetter
+from tqdm import tqdm
 
 def load_config():
     with open("config.json", "r") as file:
@@ -26,7 +27,7 @@ def test_mirror_speed(mirror_url, package_path):
 def find_top_mirrors(mirror_list, package_path, top_n=3):
     mirror_speeds = []
 
-    for mirror_url in mirror_list:
+    for mirror_url in tqdm(mirror_list, desc="Testing mirrors", unit="mirror"):
         elapsed_time = test_mirror_speed(mirror_url, package_path)
         mirror_speeds.append((mirror_url, elapsed_time))
 
