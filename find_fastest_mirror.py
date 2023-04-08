@@ -4,7 +4,7 @@ import sys
 from operator import itemgetter
 
 def test_mirror_speed(mirror_url):
-    package_url = mirror_url + "/dists/stable/main/binary-amd64/Packages.gz"
+    package_url = mirror_url + "/dists/bullseye/main/binary-amd64/Packages.gz"
     start_time = time.time()
     
     try:
